@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Вишлист Ви</title>
-<meta name="description" content="Новогодний вишлист Ви: выбери подарок и нажми «Беру!»">
+<title>Подарки для Вики</title>
+<meta name="description" content="Новогодние подарки для Вики: выбери подарок и нажми «Беру!»">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&display=swap">
@@ -83,7 +83,7 @@ footer { padding-block: 32px 48px; color: var(--muted); font-size: 14px; }
   <canvas id="snow" aria-hidden="true"></canvas>
   <div class="wrap">
     <div class="eyebrow">Новый год 2027 · Новосибирск</div>
-    <h1>Вишлист Ви</h1>
+    <h1>Подарки для Вики</h1>
     <p class="lead">Вещи, впечатления и подарки для моего шпица Орео. Выбери, что хочешь подарить, и нажми «Беру!», чтобы другие не купили то же самое. Я вижу только, что подарок занят, но не вижу, кто его взял.</p>
     <div class="legend"><span>★ очень хочу</span><span>👥 можно скинуться</span><span>🔁 можно дарить нескольким</span></div>
   </div>
@@ -102,7 +102,7 @@ footer { padding-block: 32px 48px; color: var(--muted); font-size: 14px; }
 </main>
 
 <footer class="wrap">
-  Если подарок про конкретный день, посмотри даты рядом с ним. Размер браслета и мерки Орео уточни у меня.
+  Если подарок про конкретный день, посмотри даты рядом с ним. Если что-то непонятно с размером или оттенком, спроси у меня.
 </footer>
 
 <script>
@@ -120,16 +120,19 @@ const GROUPS = [
 // multi: можно дарить нескольким людям; pool: можно скинуться.
 // Если меняешь multi/pool, поменяй и список SHARED в apps-script.gs.
 const ITEMS = [
-  { id: "mixit", g: "things", t: "Блеск или масло для губ Mixit", price: "~300–600 ₽", link: "https://ozon.ru/t/v0GGqeG" },
+  { id: "mixit", g: "things", t: "Блеск или масло для губ Mixit", price: "~300–600 ₽", link: "https://www.ozon.ru/category/bleski-dlya-gub-35417/mixit-84043065/", hint: "оттенок уточни у меня" },
+  { id: "rings", g: "things", t: "Колечки со стразами", price: "~190 ₽", link: "https://ozon.ru/t/v0GGqeG", hint: "размер уточни у меня" },
   { id: "bag", g: "things", t: "Леопардовая дорожная сумочка", price: "цена по ссылке", link: "https://ozon.ru/t/9o33nN1" },
-  { id: "decaf", g: "things", t: "Дрип-пакеты кофе декаф", price: "~600–1 000 ₽", link: "https://ozon.ru/t/D488S5Y", multi: true },
-  { id: "bracelet", g: "things", t: "Серебряный браслет", price: "1 500–7 000 ₽", hint: "размер запястья уточни у меня" },
-  { id: "cable", g: "things", t: "Кабель для зарядки Lightning — USB-C", price: "~500–1 500 ₽" },
+  { id: "suit", g: "things", t: "Комбинезон на каждый день, цвет «кофейный десерт»", price: "~950 ₽", link: "https://ozon.ru/t/D488S5Y", hint: "размер S" },
+  { id: "decaf", g: "things", t: "Дрип-пакеты кофе декаф Sibaristica, 24 шт.", price: "~1 000 ₽", link: "https://www.ozon.ru/product/drip-kofe-sibaristica-yellow-submarine-decaf-braziliya-molotyy-kofe-dekaf-v-drip-paketah-24sht-10gr-2229619105/", multi: true },
+  { id: "bracelet", g: "things", t: "Серебряный браслет", price: "1 500–7 000 ₽", hint: "обхват запястья 20 см" },
+  { id: "cable", g: "things", t: "Кабель для зарядки USB-C — Lightning, 1 м", price: "~750 ₽", link: "https://www.ozon.ru/product/baseus-kabel-type-c-lightning-dlya-bystroy-zaryadki-i-peredachi-dannyh-provod-type-c-dlya-iphone-1-5639966699/" },
   { id: "books", g: "things", t: "Подборка электронных книг: хороший нонфикшн на интересные темы", hint: "только электронные" },
 
   { id: "treats", g: "dog", t: "Лакомства", price: "~300–1 000 ₽", multi: true },
-  { id: "warm", g: "dog", t: "Тёплая зимняя одежда или лежанка", price: "1 500–4 000 ₽" },
-  { id: "raincoat", g: "dog", t: "Дождевик", price: "~1 000–2 500 ₽" },
+  { id: "bed", g: "dog", t: "Лежанка 75×55 см со съёмными чехлами, для собак 10–18 кг", price: "~2 950 ₽", link: "https://www.ozon.ru/product/lezhanka-75-55-sm-semnye-chehly-dlya-pitomtsa-ot-10-kg-do-18-kg-3537272272/" },
+  { id: "warm", g: "dog", t: "Тёплая зимняя одежда", price: "1 500–4 000 ₽", hint: "мерки уточни у меня" },
+  { id: "raincoat", g: "dog", t: "Дождевик", price: "~1 000–2 500 ₽", hint: "мерки уточни у меня" },
   { id: "trainer", g: "dog", t: "Занятие с кинологом" },
 
   { id: "decor", g: "emotions", t: "Помочь украсить квартиру к празднику", when: "1–20 декабря" },
@@ -139,14 +142,13 @@ const ITEMS = [
   { id: "walk", g: "emotions", t: "Прогулка по зимнему Новосибирску и ледовому городку", when: "20 декабря – 15 января", multi: true },
   { id: "quest", g: "emotions", t: "Квест с поиском подарка по подсказкам", when: "29–31 декабря" },
   { id: "surprise", g: "emotions", t: "День-сюрприз: я не знаю план, просто одеваюсь и еду", when: "2–11 января" },
-  { id: "oreo-walk", g: "emotions", t: "Утром 1 января погулять с Орео вместо меня", when: "1 января" },
   { id: "delivery", g: "emotions", t: "Доставка-сюрприз: ужин, десерт или цветы", hint: "можно подарить из другого города", multi: true },
 
   { id: "hockey", g: "events", t: "Хоккей: домашний матч ХК «Сибирь»", when: "декабрь – середина января", star: true, pool: true },
-  { id: "ballet", g: "events", t: "«Щелкунчик» в НОВАТе или другая постановка", when: "до 31 декабря", star: true, pool: true },
+  { id: "ballet", g: "events", t: "«Щелкунчик» в НОВАТе или другая новогодняя постановка", hint: "обязательно новогодняя 🎄", when: "до 31 декабря", star: true, pool: true },
   { id: "rink", g: "events", t: "Каток", multi: true },
   { id: "show", g: "events", t: "Концерт, спектакль или выставка", multi: true },
-  { id: "spa", g: "events", t: "Спа", when: "2–15 января", pool: true },
+  { id: "spa", g: "events", t: "Спа", when: "27 декабря – 15 января", pool: true },
   { id: "workshop", g: "events", t: "Мастер-класс (гончарка или готовка) или квест-комната" },
   { id: "dinner", g: "events", t: "Ужин в красивом ресторане" },
 ];
