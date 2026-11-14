@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Вишлист Ви</title>
+<meta name="description" content="Новогодний вишлист Ви: выбери подарок и нажми «Беру!»">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #eef3f7; --surface: #ffffff; --ink: #142231; --muted: #5b6b7c; --line: #d6e0ea;
+  --band: #10243a; --band-ink: #e8f1fa; --accent: #b5233f; --accent-ink: #ffffff;
+  --pine: #1f6b55; --pine-soft: #e0f0ea; --taken: #8a97a5; --taken-soft: #e9edf1; --star: #c98a12;
+  --font-display: "Unbounded", "Golos Text", system-ui, sans-serif;
+  --font-body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c1622; --surface: #142232; --ink: #e6eef6; --muted: #9aabbd; --line: #26384b;
+    --band: #07111c; --band-ink: #e8f1fa; --accent: #e0526d; --accent-ink: #1a0910;
+    --pine: #5cc3a0; --pine-soft: #14352c; --taken: #7d8b99; --taken-soft: #1b2a3a; --star: #f0b84a;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header { position: relative; background: var(--band); color: var(--band-ink); overflow: hidden; }
+header .wrap { position: relative; z-index: 1; padding-block: 40px 32px; display: grid; gap: 12px; }
+#snow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 7vw, 46px); line-height: 1.08; margin: 0; text-wrap: balance; }
+.lead { margin: 0; max-width: 60ch; opacity: .9; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; opacity: .9; }
+
+.status { margin: 20px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.status strong { color: var(--ink); font-weight: 600; }
+
+nav.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 8px; }
+.tab { font: inherit; font-size: 15px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tab:focus-visible, .btn:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.group { display: grid; gap: 10px; padding-block: 16px 8px; }
+section.group h2 { font-family: var(--font-display); font-weight: 500; font-size: 20px; margin: 0; display: flex; align-items: baseline; gap: 10px; }
+section.group h2 .count { font-family: var(--font-body); font-size: 14px; color: var(--muted); font-weight: 400; }
+.note { margin: 0; font-size: 14px; color: var(--muted); }
+
+.card { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.card .body { min-width: 0; display: grid; gap: 4px; }
+.card .title { font-weight: 600; font-size: 16px; margin: 0; }
+.card .title .star { color: var(--star); margin-right: 4px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.meta a { color: var(--pine); text-underline-offset: 2px; word-break: break-all; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--pine-soft); color: var(--pine); font-weight: 500; }
+.chip.taken { background: var(--taken-soft); color: var(--taken); }
+.card.is-taken .title { color: var(--taken); text-decoration: line-through; text-decoration-thickness: 1px; }
+
+.btn { font: inherit; font-weight: 600; font-size: 15px; padding: 9px 16px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
+.btn.take { background: var(--accent); color: var(--accent-ink); }
+.btn.mine { background: transparent; color: var(--pine); border-color: var(--pine); }
+.btn[disabled] { opacity: .5; cursor: default; }
+.side { display: grid; justify-items: end; gap: 4px; }
+
+footer { padding-block: 32px 48px; color: var(--muted); font-size: 14px; }
+
+@media (max-width: 520px) {
+  .card { grid-template-columns: 1fr; }
+  .side { justify-items: start; }
+}
+@media (prefers-reduced-motion: reduce) { #snow { display: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <canvas id="snow" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="eyebrow">Новый год 2027 · Новосибирск</div>
+    <h1>Вишлист Ви</h1>
+    <p class="lead">Вещи, впечатления и подарки для моего шпица Орео. Выбери, что хочешь подарить, и нажми «Беру!», чтобы другие не купили то же самое. Я вижу только, что подарок занят, но не вижу, кто его взял.</p>
+    <div class="legend"><span>★ очень хочу</span><span>👥 можно скинуться</span><span>🔁 можно дарить нескольким</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="status" id="status" role="status">Загружаю отметки…</p>
+  <nav class="tabs" role="tablist" aria-label="Разделы">
+    <button class="tab" role="tab" id="tab-all" data-tab="all" aria-selected="true">Всё</button>
+    <button class="tab" role="tab" id="tab-things" data-tab="things" aria-selected="false">Вещи</button>
+    <button class="tab" role="tab" id="tab-dog" data-tab="dog" aria-selected="false">Для Орео</button>
+    <button class="tab" role="tab" id="tab-emotions" data-tab="emotions" aria-selected="false">Эмоции</button>
+    <button class="tab" role="tab" id="tab-events" data-tab="events" aria-selected="false">Мероприятия</button>
+  </nav>
+  <div id="list"></div>
+</main>
+
+<footer class="wrap">
+  Если подарок про конкретный день, посмотри даты рядом с ним. Размер браслета и мерки Орео уточни у меня.
+</footer>
+
+<script>
+// ▼▼▼ Сюда вставляется адрес веб-приложения из Google Apps Script (оканчивается на /exec).
+// Пока строка пустая, страница работает в демо-режиме: отметки видны только на этом устройстве.
+const API_URL = "https://script.google.com/macros/s/AKfycbxoWx-66Es4uY5VB7t3iUKm_T8wVjzNZw5A7p3pKDhPaAfCjXFVZs0WxeXr99VpjXj5/exec";
+// ▲▲▲
+
+const GROUPS = [
+  { id: "things", name: "Вещи" },
+  { id: "dog", name: "Для Орео", note: "Орео: японский шпиц, около 12 кг. Мерки для одежды и дождевика уточни у меня." },
+  { id: "emotions", name: "Эмоции" },
+  { id: "events", name: "Мероприятия" },
+];
+// multi: можно дарить нескольким людям; pool: можно скинуться.
+// Если меняешь multi/pool, поменяй и список SHARED в apps-script.gs.
+const ITEMS = [
+  { id: "mixit", g: "things", t: "Блеск или масло для губ Mixit", price: "~300–600 ₽", link: "https://ozon.ru/t/v0GGqeG" },
+  { id: "bag", g: "things", t: "Леопардовая дорожная сумочка", price: "цена по ссылке", link: "https://ozon.ru/t/9o33nN1" },
+  { id: "decaf", g: "things", t: "Дрип-пакеты кофе декаф", price: "~600–1 000 ₽", link: "https://ozon.ru/t/D488S5Y", multi: true },
+  { id: "bracelet", g: "things", t: "Серебряный браслет", price: "1 500–7 000 ₽", hint: "размер запястья уточни у меня" },
+  { id: "cable", g: "things", t: "Кабель для зарядки Lightning — USB-C", price: "~500–1 500 ₽" },
+  { id: "books", g: "things", t: "Подборка электронных книг: хороший нонфикшн на интересные темы", hint: "только электронные" },
+
+  { id: "treats", g: "dog", t: "Лакомства", price: "~300–1 000 ₽", multi: true },
+  { id: "warm", g: "dog", t: "Тёплая зимняя одежда или лежанка", price: "1 500–4 000 ₽" },
+  { id: "raincoat", g: "dog", t: "Дождевик", price: "~1 000–2 500 ₽" },
+  { id: "trainer", g: "dog", t: "Занятие с кинологом" },
+
+  { id: "decor", g: "emotions", t: "Помочь украсить квартиру к празднику", when: "1–20 декабря" },
+  { id: "movies", g: "emotions", t: "Вечер новогодних фильмов с пледом и какао", when: "любой вечер декабря", multi: true },
+  { id: "breakfast", g: "emotions", t: "Завтрак в постель", when: "31 декабря – 4 января" },
+  { id: "dish", g: "emotions", t: "Приготовить моё любимое блюдо", when: "2–11 января", multi: true },
+  { id: "walk", g: "emotions", t: "Прогулка по зимнему Новосибирску и ледовому городку", when: "20 декабря – 15 января", multi: true },
+  { id: "quest", g: "emotions", t: "Квест с поиском подарка по подсказкам", when: "29–31 декабря" },
+  { id: "surprise", g: "emotions", t: "День-сюрприз: я не знаю план, просто одеваюсь и еду", when: "2–11 января" },
+  { id: "oreo-walk", g: "emotions", t: "Утром 1 января погулять с Орео вместо меня", when: "1 января" },
+  { id: "delivery", g: "emotions", t: "Доставка-сюрприз: ужин, десерт или цветы", hint: "можно подарить из другого города", multi: true },
+
+  { id: "hockey", g: "events", t: "Хоккей: домашний матч ХК «Сибирь»", when: "декабрь – середина января", star: true, pool: true },
+  { id: "ballet", g: "events", t: "«Щелкунчик» в НОВАТе или другая постановка", when: "до 31 декабря", star: true, pool: true },
+  { id: "rink", g: "events", t: "Каток", multi: true },
+  { id: "show", g: "events", t: "Концерт, спектакль или выставка", multi: true },
+  { id: "spa", g: "events", t: "Спа", when: "2–15 января", pool: true },
+  { id: "workshop", g: "events", t: "Мастер-класс (гончарка или готовка) или квест-комната" },
+  { id: "dinner", g: "events", t: "Ужин в красивом ресторане" },
+];
+
+// ---------- хранилище: localStorage с защитой ----------
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+// Анонимный номер этого устройства: по нему можно снять свою отметку. Имя нигде не сохраняется.
+let TOKEN = lsGet("wl-token");
+if (!TOKEN) {
+  TOKEN = (crypto.randomUUID ? crypto.randomUUID() : Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, "0")).join(""));
+  lsSet("wl-token", TOKEN);
+}
+
+const DEMO = !API_URL;
+const state = { tab: lsGet("wl-tab") || "all", counts: {}, mine: new Set(), mode: DEMO ? "demo" : "loading", busy: false };
+
+const listEl = document.getElementById("list");
+const statusEl = document.getElementById("status");
+
+// ---------- API ----------
+let demoMine = new Set(JSON.parse(lsGet("wl-demo") || "[]")); // демо: в памяти, плюс localStorage если доступен
+async function apiGet() {
+  if (DEMO) {
+    const mine = [...demoMine];
+    const counts = {}; mine.forEach(id => counts[id] = 1);
+    return { ok: true, counts, mine };
+  }
+  const r = await fetch(API_URL + "?token=" + encodeURIComponent(TOKEN), { cache: "no-store" });
+  return r.json();
+}
+async function apiPost(action, item) {
+  if (DEMO) {
+    action === "take" ? demoMine.add(item) : demoMine.delete(item);
+    lsSet("wl-demo", JSON.stringify([...demoMine]));
+    return apiGet();
+  }
+  // text/plain, чтобы браузер не делал предварительный запрос, который Apps Script не понимает
+  const r = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action, item, token: TOKEN }) });
+  return r.json();
+}
+function apply(res) {
+  if (!res || !res.counts) return;
+  state.counts = res.counts;
+  state.mine = new Set(res.mine || []);
+}
+
+// ---------- отрисовка ----------
+function el(tag, attrs = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else n.setAttribute(k, v);
+  }
+  for (const k of kids) if (k) n.append(k);
+  return n;
+}
+
+const MSG = {
+  demo: "<strong>Демо-режим.</strong> Отметки сохраняются только на этом устройстве. Чтобы их видели все, вставь адрес из Google Таблицы в строку API_URL.",
+  loading: "Загружаю отметки…",
+  live: "<strong>Отметки работают.</strong> Нажми «Беру!» у подарка. Если передумаешь, нажми ещё раз с того же телефона или компьютера, и отметка снимется.",
+  off: "<strong>Отметки сейчас не загружаются.</strong> Проверь интернет и обнови страницу. Список при этом актуальный.",
+};
+function renderStatus(extra) { statusEl.innerHTML = extra || MSG[state.mode]; }
+
+function render() {
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === state.tab)));
+  listEl.replaceChildren();
+  for (const g of GROUPS) {
+    if (state.tab !== "all" && state.tab !== g.id) continue;
+    const items = ITEMS.filter(i => i.g === g.id);
+    const sec = el("section", { class: "group", "aria-labelledby": "h-" + g.id });
+    sec.append(el("h2", { id: "h-" + g.id }, document.createTextNode(g.name + " "), el("span", { class: "count", text: items.length + " шт." })));
+    if (g.note) sec.append(el("p", { class: "note", text: g.note }));
+    for (const it of items) sec.append(card(it));
+    listEl.append(sec);
+  }
+}
+
+function card(it) {
+  const n = state.counts[it.id] || 0;
+  const mine = state.mine.has(it.id);
+  const shared = it.multi || it.pool;
+  const taken = n > 0 && !shared && !mine;
+
+  const title = el("p", { class: "title" });
+  if (it.star) title.append(el("span", { class: "star", "aria-label": "очень хочу", text: "★" }));
+  title.append(document.createTextNode(it.t));
+
+  const meta = el("div", { class: "meta" });
+  if (it.price) meta.append(el("span", { text: it.price }));
+  if (it.when) meta.append(el("span", { text: "📅 " + it.when }));
+  if (it.hint) meta.append(el("span", { text: it.hint }));
+  if (it.link) meta.append(el("a", { href: it.link, target: "_blank", rel: "noopener", text: it.link.replace("https://", "") }));
+
+  const chips = el("div", { class: "chips" });
+  if (it.pool) chips.append(el("span", { class: "chip", text: "👥 можно скинуться" }));
+  if (it.multi) chips.append(el("span", { class: "chip", text: "🔁 можно нескольким" }));
+  if (n > 0) chips.append(el("span", { class: "chip taken", text: shared ? "Уже дарят: " + n : "Занято" }));
+
+  const side = el("div", { class: "side" });
+  if (state.mode === "live" || state.mode === "demo") {
+    const b = el("button", { class: "btn " + (mine ? "mine" : "take"), id: "btn-" + it.id, type: "button" });
+    b.textContent = mine ? "✓ Дарю я · снять" : (it.pool && n > 0 ? "Скинусь!" : "Беру!");
+    if (taken || state.busy) b.disabled = true;
+    b.addEventListener("click", () => toggle(it.id));
+    side.append(b);
+  }
+  return el("article", { class: "card" + (taken ? " is-taken" : "") },
+    el("div", { class: "body" }, title, meta, chips.childElementCount ? chips : null),
+    side.childElementCount ? side : null);
+}
+
+async function toggle(id) {
+  if (state.busy) return;
+  const action = state.mine.has(id) ? "release" : "take";
+  state.busy = true; render();
+  try {
+    const res = await apiPost(action, id);
+    apply(res);
+    if (res && res.ok === false && res.error === "taken") renderStatus("<strong>Этот подарок только что взял кто-то другой.</strong> Выбери, пожалуйста, другой.");
+    else renderStatus();
+  } catch (e) {
+    renderStatus("<strong>Отметка не сохранилась.</strong> Проверь интернет и попробуй ещё раз.");
+  }
+  state.busy = false; render();
+}
+
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+  state.tab = b.dataset.tab; lsSet("wl-tab", state.tab); render();
+}));
+
+async function load() {
+  try {
+    const res = await apiGet();
+    apply(res);
+    if (!DEMO) state.mode = "live";
+  } catch (e) {
+    if (!DEMO) state.mode = "off";
+  }
+  renderStatus(); render();
+}
+
+render(); renderStatus(); load();
+// Подтягиваем свежие отметки, когда человек возвращается на вкладку
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !state.busy) load(); });
+
+// ---------- снег ----------
+(() => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv = document.getElementById("snow");
+  const ctx = cv.getContext("2d");
+  let flakes = [], w = 0, h = 0;
+  function size() {
+    const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    w = r.width; h = r.height; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    flakes = Array.from({ length: Math.round(w / 9) }, () => ({ x: Math.random() * w, y: Math.random() * h, r: .8 + Math.random() * 2.2, s: .3 + Math.random() * .8, d: Math.random() * 6 }));
+  }
+  function loop() {
+    ctx.clearRect(0, 0, w, h); ctx.fillStyle = "rgba(255,255,255,.75)";
+    for (const f of flakes) {
+      f.y += f.s; f.d += .01; f.x += Math.sin(f.d) * .3;
+      if (f.y > h + 4) { f.y = -4; f.x = Math.random() * w; }
+      ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fill();
+    }
+    requestAnimationFrame(loop);
+  }
+  size(); window.addEventListener("resize", size); loop();
+})();
+</script>
+</body>
+</html>
