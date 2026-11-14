@@ -108,6 +108,7 @@ footer { padding-block: 32px 48px; color: var(--muted); font-size: 14px; }
 <script>
 // ▼▼▼ Сюда вставляется адрес веб-приложения из Google Apps Script (оканчивается на /exec).
 // Пока строка пустая, страница работает в демо-режиме: отметки видны только на этом устройстве.
+const MULTI_MAX = 3; // сколько человек максимум могут взять пункт «можно нескольким» (то же число в apps-script.gs)
 const API_URL = "https://script.google.com/macros/s/AKfycbxoWx-66Es4uY5VB7t3iUKm_T8wVjzNZw5A7p3pKDhPaAfCjXFVZs0WxeXr99VpjXj5/exec";
 // ▲▲▲
 
@@ -121,17 +122,19 @@ const GROUPS = [
 // Если меняешь multi/pool, поменяй и список SHARED в apps-script.gs.
 const ITEMS = [
   { id: "mixit", g: "things", t: "Блеск или масло для губ Mixit", price: "~300–600 ₽", link: "https://www.ozon.ru/product/mixit-maslo-dlya-gub-uvlazhnyayushchee-alyy-damask-blesk-dlya-gub-s-vitaminami-5-ml-1840436552/", hint: "оттенок любой, можно несколько разных", multi: true },
-  { id: "rings", g: "things", t: "Колечки со стразами", price: "~190 ₽", link: "https://ozon.ru/t/v0GGqeG", hint: "размер уточни у меня" },
-  { id: "bag", g: "things", t: "Леопардовая дорожная сумочка", price: "цена по ссылке", link: "https://ozon.ru/t/9o33nN1" },
+  { id: "rings", g: "things", t: "Колечки со стразами", price: "~190 ₽", link: "https://ozon.ru/t/v0GGqeG" },
+  { id: "bag", g: "things", t: "Леопардовая дорожная сумочка", price: "~800–900 ₽", link: "https://ozon.ru/t/9o33nN1" },
   { id: "suit", g: "things", t: "Комбинезон на каждый день, цвет «кофейный десерт»", price: "~950 ₽", link: "https://ozon.ru/t/D488S5Y", hint: "размер S" },
   { id: "decaf", g: "things", t: "Дрип-пакеты кофе декаф Sibaristica, 24 шт.", price: "~1 000 ₽", link: "https://www.ozon.ru/product/drip-kofe-sibaristica-yellow-submarine-decaf-braziliya-molotyy-kofe-dekaf-v-drip-paketah-24sht-10gr-2229619105/", multi: true },
   { id: "bracelet", g: "things", t: "Серебряный браслет", price: "1 500–7 000 ₽", hint: "обхват запястья 20 см" },
-  { id: "cable", g: "things", t: "Кабель для зарядки USB-C — Lightning, 1 м", price: "~750 ₽", link: "https://www.ozon.ru/product/baseus-kabel-type-c-lightning-dlya-bystroy-zaryadki-i-peredachi-dannyh-provod-type-c-dlya-iphone-1-5639966699/" },
+  { id: "cable", g: "things", t: "Кабель для зарядки USB-C — Lightning, 1 м", price: "~750 ₽ или ~1 370 ₽", hint: "на выбор: аналог Baseus или оригинал Apple", links: [
+    { label: "Baseus (аналог), ~750 ₽", url: "https://www.ozon.ru/product/baseus-kabel-type-c-lightning-dlya-bystroy-zaryadki-i-peredachi-dannyh-provod-type-c-dlya-iphone-1-5639966699/" },
+    { label: "Apple (оригинал), ~1 370 ₽", url: "https://www.ozon.ru/product/kabel-apple-usb-c-lightning-1-m-60w-usb-type-c-to-lightning-dlya-mobilnyh-ustroystv-a2561-314498700/" },
+  ] },
   { id: "books", g: "things", t: "Подборка электронных книг: хороший нонфикшн на интересные темы", hint: "только электронные" },
 
   { id: "treats", g: "dog", t: "Лакомство: говяжье лёгкое сушёное БонХруст, 300 г", price: "~790 ₽", link: "https://www.ozon.ru/product/lakomstvo-dlya-sobak-bonhrust-legkoe-govyazhe-sushenoe-300-g-naturalnoe-bez-dobavok-dlya-dressirovki-1522749644/", multi: true },
-  { id: "bed", g: "dog", t: "Лежанка 75×55 см со съёмными чехлами, для собак 10–18 кг", price: "~2 950 ₽", link: "https://www.ozon.ru/product/lezhanka-75-55-sm-semnye-chehly-dlya-pitomtsa-ot-10-kg-do-18-kg-3537272272/" },
-  { id: "warm", g: "dog", t: "Тёплая зимняя одежда", price: "1 500–4 000 ₽", hint: "мерки уточни у меня" },
+  { id: "bed", g: "dog", t: "Лежанка 75×55 см со съёмными чехлами, для собак 10–18 кг", price: "~2 950 ₽", link: "https://www.ozon.ru/product/lezhanka-75-55-sm-semnye-chehly-dlya-pitomtsa-ot-10-kg-do-18-kg-3537272272/", hint: "размер примерно такой, цвет можно выбрать другой" },
   { id: "raincoat", g: "dog", t: "Дождевик", price: "~1 000–2 500 ₽", hint: "мерки уточни у меня" },
   { id: "trainer", g: "dog", t: "Занятие с кинологом" },
 
@@ -233,7 +236,8 @@ function card(it) {
   const n = state.counts[it.id] || 0;
   const mine = state.mine.has(it.id);
   const shared = it.multi || it.pool;
-  const taken = n > 0 && !shared && !mine;
+  const full = it.multi && n >= MULTI_MAX && !mine;   // «можно нескольким» — не больше трёх человек
+  const taken = (n > 0 && !shared && !mine) || full;
 
   const title = el("p", { class: "title" });
   if (it.star) title.append(el("span", { class: "star", "aria-label": "очень хочу", text: "★" }));
@@ -244,11 +248,12 @@ function card(it) {
   if (it.when) meta.append(el("span", { text: "📅 " + it.when }));
   if (it.hint) meta.append(el("span", { text: it.hint }));
   if (it.link) meta.append(el("a", { href: it.link, target: "_blank", rel: "noopener", text: it.link.replace("https://", "") }));
+  for (const l of it.links || []) meta.append(el("a", { href: l.url, target: "_blank", rel: "noopener", text: l.label }));
 
   const chips = el("div", { class: "chips" });
   if (it.pool) chips.append(el("span", { class: "chip", text: "👥 можно скинуться" }));
-  if (it.multi) chips.append(el("span", { class: "chip", text: "🔁 можно нескольким" }));
-  if (n > 0) chips.append(el("span", { class: "chip taken", text: shared ? "Уже дарят: " + n : "Занято" }));
+  if (it.multi) chips.append(el("span", { class: "chip", text: "🔁 можно нескольким, до " + MULTI_MAX }));
+  if (n > 0) chips.append(el("span", { class: "chip taken", text: it.multi ? "Уже дарят: " + n + " из " + MULTI_MAX : (shared ? "Уже дарят: " + n : "Занято") }));
 
   const side = el("div", { class: "side" });
   if (state.mode === "live" || state.mode === "demo") {
@@ -270,7 +275,8 @@ async function toggle(id) {
   try {
     const res = await apiPost(action, id);
     apply(res);
-    if (res && res.ok === false && res.error === "taken") renderStatus("<strong>Этот подарок только что взял кто-то другой.</strong> Выбери, пожалуйста, другой.");
+    if (res && res.ok === false && res.error === "full") renderStatus("<strong>Этот подарок уже дарят трое.</strong> Выбери, пожалуйста, другой.");
+    else if (res && res.ok === false && res.error === "taken") renderStatus("<strong>Этот подарок только что взял кто-то другой.</strong> Выбери, пожалуйста, другой.");
     else renderStatus();
   } catch (e) {
     renderStatus("<strong>Отметка не сохранилась.</strong> Проверь интернет и попробуй ещё раз.");
