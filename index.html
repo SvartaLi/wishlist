@@ -121,20 +121,20 @@ const GROUPS = [
 // multi: можно дарить нескольким людям; pool: можно скинуться.
 // Если меняешь multi/pool, поменяй и список SHARED в apps-script.gs.
 const ITEMS = [
-  { id: "mixit", g: "things", t: "Блеск или масло для губ Mixit", price: "~300–600 ₽", link: "https://www.ozon.ru/product/mixit-maslo-dlya-gub-uvlazhnyayushchee-alyy-damask-blesk-dlya-gub-s-vitaminami-5-ml-1840436552/", hint: "оттенок любой, можно несколько разных", multi: true },
+  { id: "mixit", g: "things", star: true, t: "Блеск или масло для губ Mixit", price: "~300–600 ₽", link: "https://www.ozon.ru/product/mixit-maslo-dlya-gub-uvlazhnyayushchee-alyy-damask-blesk-dlya-gub-s-vitaminami-5-ml-1840436552/", hint: "оттенок любой, можно несколько разных", multi: true },
   { id: "rings", g: "things", t: "Колечки со стразами", price: "~190 ₽", link: "https://ozon.ru/t/v0GGqeG" },
   { id: "bag", g: "things", t: "Леопардовая дорожная сумочка", price: "~800–900 ₽", link: "https://ozon.ru/t/9o33nN1" },
-  { id: "suit", g: "things", t: "Комбинезон на каждый день, цвет «кофейный десерт»", price: "~950 ₽", link: "https://ozon.ru/t/D488S5Y", hint: "размер S" },
-  { id: "decaf", g: "things", t: "Дрип-пакеты кофе декаф Sibaristica, 24 шт.", price: "~1 000 ₽", link: "https://www.ozon.ru/product/drip-kofe-sibaristica-yellow-submarine-decaf-braziliya-molotyy-kofe-dekaf-v-drip-paketah-24sht-10gr-2229619105/", multi: true },
+  { id: "suit", g: "things", star: true, t: "Комбинезон на каждый день, цвет «кофейный десерт»", price: "~950 ₽", link: "https://ozon.ru/t/D488S5Y", hint: "размер S" },
+  { id: "decaf", g: "things", t: "Дрип-пакеты кофе декаф Sibaristica, 24 шт.", price: "~1 000 ₽", hint: "ссылка для примера: подойдут любые дрип-пакеты, главное — декаф", link: "https://www.ozon.ru/product/drip-kofe-sibaristica-yellow-submarine-decaf-braziliya-molotyy-kofe-dekaf-v-drip-paketah-24sht-10gr-2229619105/", multi: true },
   { id: "bracelet", g: "things", t: "Серебряный браслет", price: "1 500–7 000 ₽", hint: "обхват запястья 20 см" },
-  { id: "cable", g: "things", t: "Кабель для зарядки USB-C — Lightning, 1 м", price: "~750 ₽ или ~1 370 ₽", hint: "на выбор: аналог Baseus или оригинал Apple", links: [
+  { id: "cable", g: "things", star: true, t: "Кабель для зарядки USB-C — Lightning, 1 м", price: "~750 ₽ или ~1 370 ₽", hint: "на выбор: аналог Baseus или оригинал Apple", links: [
     { label: "Baseus (аналог), ~750 ₽", url: "https://www.ozon.ru/product/baseus-kabel-type-c-lightning-dlya-bystroy-zaryadki-i-peredachi-dannyh-provod-type-c-dlya-iphone-1-5639966699/" },
     { label: "Apple (оригинал), ~1 370 ₽", url: "https://www.ozon.ru/product/kabel-apple-usb-c-lightning-1-m-60w-usb-type-c-to-lightning-dlya-mobilnyh-ustroystv-a2561-314498700/" },
   ] },
   { id: "books", g: "things", t: "Подборка электронных книг: хороший нонфикшн на интересные темы", hint: "только электронные" },
 
   { id: "treats", g: "dog", t: "Лакомство: говяжье лёгкое сушёное БонХруст, 300 г", price: "~790 ₽", link: "https://www.ozon.ru/product/lakomstvo-dlya-sobak-bonhrust-legkoe-govyazhe-sushenoe-300-g-naturalnoe-bez-dobavok-dlya-dressirovki-1522749644/", multi: true },
-  { id: "bed", g: "dog", t: "Лежанка 75×55 см со съёмными чехлами, для собак 10–18 кг", price: "~2 950 ₽", link: "https://www.ozon.ru/product/lezhanka-75-55-sm-semnye-chehly-dlya-pitomtsa-ot-10-kg-do-18-kg-3537272272/", hint: "размер примерно такой, цвет можно выбрать другой" },
+  { id: "bed", g: "dog", t: "Лежанка 75×55 см со съёмными чехлами, для собак 10–18 кг", price: "~2 950 ₽", link: "https://www.ozon.ru/product/lezhanka-75-55-sm-semnye-chehly-dlya-pitomtsa-ot-10-kg-do-18-kg-3537272272/", hint: "размер примерно такой, цвет можно выбрать другой", pool: true },
   { id: "raincoat", g: "dog", t: "Дождевик", price: "~1 000–2 500 ₽", hint: "мерки уточни у меня" },
   { id: "trainer", g: "dog", t: "Занятие с кинологом" },
 
@@ -144,7 +144,7 @@ const ITEMS = [
   { id: "dish", g: "emotions", t: "Приготовить моё любимое блюдо", when: "2–11 января", multi: true },
   { id: "walk", g: "emotions", t: "Прогулка по зимнему Новосибирску и ледовому городку", when: "20 декабря – 15 января", multi: true },
   { id: "quest", g: "emotions", t: "Квест с поиском подарка по подсказкам", when: "29–31 декабря" },
-  { id: "surprise", g: "emotions", t: "День-сюрприз: я не знаю план, просто одеваюсь и еду", when: "2–11 января" },
+  { id: "surprise", g: "emotions", star: true, t: "День-сюрприз: я не знаю план, просто одеваюсь и еду", when: "2–11 января" },
   { id: "delivery", g: "emotions", t: "Доставка-сюрприз: ужин, десерт или цветы", hint: "можно подарить из другого города", multi: true },
 
   { id: "hockey", g: "events", t: "Хоккей: домашний матч ХК «Сибирь»", when: "декабрь – середина января", star: true, pool: true },
